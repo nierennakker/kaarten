@@ -1,4 +1,4 @@
-package xyz.nierennakker.cards.block;
+package xyz.nierennakker.kaarten.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
-import xyz.nierennakker.cards.entity.block.GameTableBlockEntity;
+import xyz.nierennakker.kaarten.entity.block.GameTableBlockEntity;
 
 public class GameTableBlock extends Block implements EntityBlock {
     public GameTableBlock() {
