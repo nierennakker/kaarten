@@ -1,5 +1,6 @@
 package xyz.nierennakker.kaarten;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -9,11 +10,15 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import xyz.nierennakker.kaarten.block.GameTableBlock;
+import xyz.nierennakker.kaarten.client.GameTableScreen;
 import xyz.nierennakker.kaarten.entity.block.GameTableBlockEntity;
+import xyz.nierennakker.kaarten.network.OpenTablePayload;
 
 import java.util.function.Supplier;
 
@@ -42,5 +47,18 @@ public class Kaarten {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(Kaarten.GAME_TABLE_ITEM);
         }
+    }
+
+    @SubscribeEvent
+    public void register(RegisterPayloadHandlerEvent event) {
+        event.registrar(Kaarten.MOD_ID)
+            .play(
+                OpenTablePayload.ID,
+                OpenTablePayload::new,
+                handlers -> handlers.client(this::handle));
+    }
+
+    private void handle(OpenTablePayload payload, PlayPayloadContext context) {
+        context.workHandler().execute(() -> Minecraft.getInstance().setScreen(new GameTableScreen(payload.pos())));
     }
 }
